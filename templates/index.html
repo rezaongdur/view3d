@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisasi Interior 360 - Pannellum</title>
+    
+    <!-- Memuat Pustaka CSS Pannellum -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"/>
+    
+    <!-- Memuat Pustaka JS Pannellum -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: white;
+            overflow: hidden;
+        }
+        #panorama {
+            width: 100vw;
+            height: 100vh;
+        }
+        .control-panel {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.75);
+            padding: 12px 20px;
+            border-radius: 8px;
+            display: flex;
+            gap: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+        button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #003d82;
+        }
+        .title-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 999;
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px 18px;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-overlay" p>
+        <h3 style="margin: 0 0 5px 0;">Ruang Rapat Eksekutif Polres Lebak</h3>
+        <p style="font-size: 13px; margin: 0; color: #ccc;">Geser kursor untuk melihat sekeliling (Pannellum Viewer)</p>
+    </div>
+
+    <!-- Container Pannellum -->
+    <div id="panorama"></div>
+
+    <!-- Panel Kontrol Sudut Pandang (Menggunakan ID Scene) -->
+    <div class="control-panel">
+        <button onclick="switchView('sudut_pandang_1')">Sudut Pandang 1 (Sisi Monitor)</button>
+        <button onclick="switchView('sudut_pandang_2')">Sudut Pandang 2 (Sisi Logo Utama)</button>
+    </div>
+
+    <script>
+        // Inisialisasi Pannellum Viewer dengan format Multiscene
+        let viewer = pannellum.viewer('panorama', {
+            "default": {
+                "firstScene": "sudut_pandang_1",
+                "autoLoad": true,
+                "sceneFadeDuration": 1000, // Efek transisi antar gambar selama 1 detik
+                "compass": false
+            },
+            "scenes": {
+                "sudut_pandang_1": {
+                    "type": "equirectangular",
+                    "panorama": "{{ url_for('static', filename='image1.jpg') }}",
+                    "hfov": 100
+                },
+                "sudut_pandang_2": {
+                    "type": "equirectangular",
+                    "panorama": "{{ url_for('static', filename='image2.jpg') }}",
+                    "hfov": 100
+                }
+            }
+        });
+
+        // Fungsi untuk mengeksekusi perpindahan scene berdasarkan ID
+        function switchView(sceneId) {
+            viewer.loadScene(sceneId);
+        }
+    </script>
+
+</body>
+</html>
